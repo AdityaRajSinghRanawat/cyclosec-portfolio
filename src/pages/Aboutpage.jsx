@@ -13,13 +13,12 @@ import img12 from "../assets/img12.jpg";
 import img13 from "../assets/img13.jpg";
 import img14 from "../assets/img14.jpg";
 
-
 export default function Aboutpage() {
   return (
     <>
       <div
         className="hero-section h-screen bg-cover bg-center text-text grid grid-cols-3 grid-rows-3 place-items-center text-shadow-lg"
-        style={{ backgroundImage: `url(${img01})`}}
+        style={{ backgroundImage: `url(${img01})` }}
       >
         <div
           id="about-us"
@@ -175,10 +174,9 @@ export default function Aboutpage() {
                 aliquam sapiente quis a in possimus atque expedita, cupiditate
                 necessitatibus doloremque similique sint iusto laudantium, earum
                 quaerat accusamus. Lorem ipsum dolor sit amet consectetur
-                adipisicuaditate? Molestias quo ad unde tempora
-                consequuntur sint, hic porro doloribus quisquam earum mollitia,
-                aliquid in vel ipsum! Perspiciatis, ipsum dignissimos. A,
-                repellat eveniet.
+                adipisicuaditate? Molestias quo ad unde tempora consequuntur
+                sint, hic porro doloribus quisquam earum mollitia, aliquid in
+                vel ipsum! Perspiciatis, ipsum dignissimos. A, repellat eveniet.
               </div>
             </div>
           </div>

@@ -1,29 +1,44 @@
-// icons 
+// icons
 import { IoClose, IoMenu } from "react-icons/io5";
 // react imports
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-// framer motion 
+// framer motion
 import { AnimatePresence, motion } from "framer-motion";
-//  custom components 
+//  custom components
 import { PrimaryButton, SecondaryButton } from "../Buttons";
 // all link routes
 import { navLinks } from "./routes";
 // navbar logo
 import { logo_50px } from "../../Assets/company_img";
 
+import { UserButton, useUser } from "@clerk/clerk-react";
+import { dark } from "@clerk/themes";
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [clickedIndex, setClickedIndex] = useState(null);
+
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
   }, [isOpen]);
 
   const subMenuAnimate = {
-    enter: { opacity: 1, rotateX: 0, display: "block", transition: { duration: 0.3 } },
-    exit: { opacity: 0, rotateX: -15, display: "none", transition: { duration: 0.3 } },
+    enter: {
+      opacity: 1,
+      rotateX: 0,
+      display: "block",
+      transition: { duration: 0.3 },
+    },
+    exit: {
+      opacity: 0,
+      rotateX: -15,
+      display: "none",
+      transition: { duration: 0.3 },
+    },
   };
 
   const subMenuDrawer = {
@@ -38,7 +53,11 @@ export default function Navbar() {
           <div className="border border-white/15 rounded-[27px] md:rounded-full bg-neutral-950/70 backdrop-blur mx-4">
             <div className="grid grid-cols-2 lg:[grid-template-columns:1fr_3fr_1.8fr] p-2 px-4 md:px-2 items-center">
               <div className="flex items-center gap-x-1">
-                <img className="h-8 pl-1 w-auto" src={logo_50px} alt="Cyclosec Logo" />
+                <img
+                  className="h-8 pl-1 w-auto"
+                  src={logo_50px}
+                  alt="Cyclosec Logo"
+                />
                 <h3 className="font-semibold text-white">Cyclosec</h3>
               </div>
 
@@ -65,7 +84,9 @@ export default function Navbar() {
                             exit="exit"
                             variants={subMenuAnimate}
                           >
-                            <div className={`grid gap-7 grid-cols-${link.gridCols}`}>
+                            <div
+                              className={`grid gap-7 grid-cols-${link.gridCols}`}
+                            >
                               {link.subMenu.map((item) => (
                                 <NavLink
                                   to={item.path}
@@ -76,8 +97,12 @@ export default function Navbar() {
                                     {item.icon && <item.icon size={20} />}
                                   </div>
                                   <div>
-                                    <h6 className="font-semibold">{item.name}</h6>
-                                    <p className="text-sm text-gray-300">{item.description}</p>
+                                    <h6 className="font-semibold">
+                                      {item.name}
+                                    </h6>
+                                    <p className="text-sm text-gray-300">
+                                      {item.description}
+                                    </p>
                                   </div>
                                 </NavLink>
                               ))}
@@ -102,9 +127,17 @@ export default function Navbar() {
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={isOpen ? "close" : "menu"}
-                    initial={{ opacity: 0, rotate: isOpen ? -90 : 90, scale: 0.8 }}
+                    initial={{
+                      opacity: 0,
+                      rotate: isOpen ? -90 : 90,
+                      scale: 0.8,
+                    }}
                     animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                    exit={{ opacity: 0, rotate: isOpen ? 180 : -90, scale: 0.8 }}
+                    exit={{
+                      opacity: 0,
+                      rotate: isOpen ? 180 : -90,
+                      scale: 0.8,
+                    }}
                     transition={{ duration: 0.3 }}
                   >
                     {isOpen ? (
@@ -125,15 +158,35 @@ export default function Navbar() {
                   </motion.div>
                 </AnimatePresence>
 
-                <SecondaryButton
-                  className="hover:bg-PrimaryTextColour hover:text-neutral-950 transition-all duration-200 hidden md:inline-flex"
-                  name="Sign Up"
-                  Route="/home"
-                />
-                <PrimaryButton
-                  className="hover:bg-green-400 transition-all duration-200 hidden md:inline-flex"
-                  name="Log In"
-                  Route="/home"
+                {!isSignedIn && (
+                  <>
+                    <SecondaryButton
+                      className="hover:bg-PrimaryTextColour hover:text-neutral-950 transition-all duration-200 hidden md:inline-flex"
+                      name="Sign Up"
+                      Route="/signup"
+                    />
+                    <PrimaryButton
+                      className="hover:bg-green-400 transition-all duration-200 hidden md:inline-flex"
+                      name="Sign In"
+                      Route="/login"
+                    />
+                  </>
+                )}
+
+                <UserButton
+                  appearance={{
+                    baseTheme: dark,
+
+                    variables: {
+                      colorPrimary: "#cada7f",
+                      colorText: "#cada7f",
+                      colorTextSecondary: "#EEE8FB",
+                      colorInputText: "#cada7f",
+                      colorNeutral : "#EEE8FB",
+                    },
+                  }}
+                  userProfileMode="navigation"
+                  userProfileUrl="/userprofile"
                 />
               </div>
             </div>
@@ -154,12 +207,16 @@ export default function Navbar() {
                         <div key={link.label} className="w-full">
                           {link.hasSubmenu ? (
                             <button
-                              onClick={() => setClickedIndex(isActive ? null : index)}
+                              onClick={() =>
+                                setClickedIndex(isActive ? null : index)
+                              }
                               className="flex justify-between w-full font-medium py-2"
                             >
                               <span>{link.label}</span>
                               <i
-                                className={`fa fa-angle-down transition-transform duration-200 ${isActive ? "rotate-180" : ""}`}
+                                className={`fa fa-angle-down transition-transform duration-200 ${
+                                  isActive ? "rotate-180" : ""
+                                }`}
                               />
                             </button>
                           ) : (
@@ -187,7 +244,10 @@ export default function Navbar() {
                                   onClick={() => setIsOpen(false)}
                                   className="p-2 flex items-center hover:bg-white/5 rounded-md gap-x-5"
                                 >
-                                  <item.icon className="text-PrimaryTextColour" size={20} />
+                                  <item.icon
+                                    className="text-PrimaryTextColour"
+                                    size={20}
+                                  />
                                   <span>{item.name}</span>
                                 </NavLink>
                               ))}
@@ -208,7 +268,6 @@ export default function Navbar() {
           </div>
         </div>
       </section>
-
     </>
   );
 }
